@@ -1,0 +1,40 @@
+server:
+  port: 8380
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: feign
+
+
+# Feign的ReadTimeout 60000 ConnectTimeout 10000
+# feign.Request的 Options 方法
+#请求处理的超时时间  add by six-vision
+#ribbon:
+#  ReadTimeout: 3000
+#  SocketTimeout: 3000
+#请求连接的超时时间 add by six-vision
+#  ConnectTimeout: 3000
+
+#feign:
+#  client:
+#    config:
+#      default:           #服务名，填写default为所有服务
+#        connectTimeout: 3000
+#        readTimeout: 3000
+ribbon:
+  OkToRetryOnAllOperations: false
+  SocketTimeout: 6000
+  ReadTimeout: 6000
+  ConnectTimeout: 6000
+  # 同一台实例重试次数，不包括首次调用
+  MaxAutoRetries: 0
+  # 其他负载均衡实例重试次数，不包括首次server调用
+  MaxAutoRetriesNextServer: 0
