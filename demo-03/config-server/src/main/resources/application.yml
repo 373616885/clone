@@ -1,0 +1,22 @@
+server:
+  port: 8580
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: config-server
+  profiles:
+    active: native  # 配置使用本地储存
+  cloud:
+    config:
+      server:
+        native:
+#          search-locations: classpath:/config
+        search-locations: D:/Workspaces/Idea-tag/demo/config-server/src/main/resources/config
