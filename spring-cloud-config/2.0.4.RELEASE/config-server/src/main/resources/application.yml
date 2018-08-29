@@ -1,0 +1,14 @@
+server:
+  port: 8580
+
+
+
+spring:
+  profiles:
+    active: native  # 配置使用本地储存
+  cloud:
+    config:
+      server:
+        native:
+          search-locations: classpath:/config
+

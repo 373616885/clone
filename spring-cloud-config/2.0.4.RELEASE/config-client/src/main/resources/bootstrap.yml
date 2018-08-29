@@ -1,0 +1,22 @@
+
+
+spring:
+  cloud:
+    config:
+      name: config-client  # 前缀
+      profile: dev # 对应配置中心文件的${profile}部分 (后缀)
+      uri: http://127.0.0.1:8580
+      enabled: true
+
+# refresh端点给放出来  刷新请求：/actuator/refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+#management:
+#  endpoint:
+#    env:
+#      enabled: false
+#  security:
+#    enabled: false
