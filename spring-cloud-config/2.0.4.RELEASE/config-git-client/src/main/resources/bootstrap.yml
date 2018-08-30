@@ -1,0 +1,35 @@
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+    registry-fetch-interval-seconds: 10 # 从服务端获取时间注册信息时间间隔  
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  cloud:
+    config:
+      name: config-client  # 前缀
+      profile: dev # 对应配置中心文件的${profile}部分 (后缀)
+      #uri: http://127.0.0.1:8580
+      enabled: true
+      discovery:
+        enabled: true #是从配置中心读取文件
+        service-id: config-git-server # 配置中心的servieId，即服务名
+  application:
+    name: config-git-client
+
+# refresh端点给放出来  刷新请求：/actuator/refresh
+management:
+  endpoints:
+    web:
+      exposure:
+        include: refresh
+#management:
+#  endpoint:
+#    env:
+#      enabled: false
+#  security:
+#    enabled: false

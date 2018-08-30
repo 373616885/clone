@@ -1,0 +1,25 @@
+server:
+  port: 8580
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+    registry-fetch-interval-seconds: 10 # 从服务端获取时间注册信息时间间隔
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: config-git-server
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/373616885/clone.git
+          search-paths: spring-cloud-config # 文件在spring-cloud-config目录中
+          username: 123
+          password: 123
+          default-label: master
+        
