@@ -1,0 +1,75 @@
+server:
+  port: 8480
+  tomcat:
+    uri-encoding: utf-8
+
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+#logging:
+#  pattern:
+#    console: "%d{HH:mm:ss.SSS} %contextName [%thread] %-5level %logger{36} - %msg%n"
+#  level:
+#    org:
+#      apache:
+#        tomcat: info
+#    sun:
+#      rmi: info
+#    javax:
+#      management: info
+#    root: info
+#  file: log/zuul.log
+
+spring:
+  application:
+    name: zuul
+  messages:
+    encoding: UTF-8
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
+  banner:
+    charset: UTF-8
+
+
+zuul:
+  routes:
+    ribbon:
+      path: /api-ribbon/**
+      serviceId: ribbon
+    feign:
+      path: /api-feign/**
+      serviceId: feign
+  host:
+    socket-timeout-millis: 6000
+    connect-timeout-millis: 6000
+  retryable: false
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: false
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
+
+ribbon:
+  OkToRetryOnAllOperations: false
+  ReadTimeout: 6000
+  ConnectTimeout: 6000
+  SocketTimeout: 6000
+  # 同一台实例重试次数，不包括首次调用
+  MaxAutoRetries: 0
+  # 其他负载均衡实例重试次数，不包括首次server调用
+  MaxAutoRetriesNextServer: 0
