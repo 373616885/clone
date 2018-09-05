@@ -5,7 +5,7 @@ eureka:
   client:
     serviceUrl:
       defaultZone: http://localhost:8080/eureka/
-    registry-fetch-interval-seconds: 10 # 从服务端获取时间注册信息时间间隔
+     #registry-fetch-interval-seconds: 10 # 这个应该在服务端配置，客户端应该配置eureka.client.fetch-registry=true这个，配合服务端的registry-fetch-interval-seconds属性
   instance:
     prefer-ip-address: true
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
