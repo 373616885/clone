@@ -39,6 +39,12 @@
 			<artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
 		</dependency>
 		
+		<!-- 重试机制 需要到的 -->
+		<dependency>
+		    <groupId>org.springframework.retry</groupId>
+		    <artifactId>spring-retry</artifactId>
+		</dependency>
+		
 		<!-- @RefreshScope 需要到的 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
