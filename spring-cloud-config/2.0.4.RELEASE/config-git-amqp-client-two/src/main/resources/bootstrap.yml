@@ -1,0 +1,52 @@
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+    fetch-registry: true  #与服务端的registry-fetch-interval-seconds属性配合使用
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  cloud:
+    config:
+      retry: # 这个需要spring-retry这个jar
+        max-attempts: 6 # 配置重试次数，默认为6
+        multiplier: 1.1 # 间隔乘数，默认1.1
+        max-interval: 2000 # 最大间隔时间，默认2000ms
+        initial-interval: 1000  # 初始重试间隔时间，默认1000ms
+      label: master
+      name: config-client  # 前缀
+      profile: dev # 对应配置中心文件的${profile}部分 (后缀)
+      #uri: http://127.0.0.1:8580
+      enabled: true
+      discovery:
+        enabled: true #是从配置中心读取文件
+        service-id: config-amqp-server # 配置中心的servieId，即服务名
+      fail-fast: true #快速响应失败 。设为true，如果无法连接config server，启动时会抛异常，并停止服务   设为false，无法连接config server但客户端报错的时候系统还会继续启动
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+  application:
+    name: config-amqp-client
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+
+# bus 应该在服务端更新 客户端可以不开放更新端口
+# refresh端点给放出来  刷新请求：/actuator/refresh
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: refresh
+#management:
+#  endpoint:
+#    env:
+#      enabled: false
+#  security:
+#    enabled: false

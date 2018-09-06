@@ -1,0 +1,50 @@
+server:
+  port: 8581
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+    fetch-registry: true #eureka.client.fetch-registry=true这个属性，配合服务端的registry-fetch-interval-seconds属性使用
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: config-amqp-server
+  messages:
+    encoding: UTF-8
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
+  banner:
+    charset: UTF-8
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  cloud:
+    config:
+      label: master
+      server:
+        git:
+          uri: https://github.com/373616885/clone.git
+          search-paths: spring-cloud-config # 文件在spring-cloud-config目录中
+          username: 123
+          password: 123
+          default-label: master
+          force-pull: true # force-pull，配置当本地目录与远程配置有冲突时是否强制拉取配置
+          clone-on-start: true # 启动时克隆远程仓库到本地
+    bus:
+      enabled: true
+      trace:
+        enabled: true
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: bus-refresh
