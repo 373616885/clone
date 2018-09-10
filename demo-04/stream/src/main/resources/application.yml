@@ -8,14 +8,14 @@ spring:
         input:
           destination: cloud-stream
           binder: local_rabbit
-          content-type: text/plain  # \u8BBE\u7F6E\u6D88\u606F\u7C7B\u578B\uFF0C\u672C\u6B21\u4E3A\u5BF9\u8C61json\uFF0C\u5982\u679C\u662F\u6587\u672C\u5219\u8BBE\u7F6E\u201Capplication/json\u201D
+          content-type: text/plain  # 设置消息类型，本次为文本 text/plain，如果是json对象则设置“application/json”
         output:
           destination: cloud-stream
           binder: local_rabbit
           content-type: text/plain
       binders:
-        local_rabbit: # \u8868\u793A\u5B9A\u4E49\u7684\u540D\u79F0\uFF0C\u7528\u4E8E\u4E8Ebinding\u6574\u5408
-          type: rabbit # \u6D88\u606F\u7EC4\u4EF6\u7C7B\u578B
+        local_rabbit: # 表示定义的名称，用于于binding 的 binder整合
+          type: rabbit # 消息组件类型
           environment:
             spring:
               rabbitmq:
