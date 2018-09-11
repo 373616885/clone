@@ -1,0 +1,49 @@
+server:
+  port: 8780
+  tomcat:
+    uri-encoding: UTF-8
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+    fetch-registry: true # \u4E0E\u670D\u52A1\u7AEF\u7684registry-fetch-interval-seconds\u914D\u5408\u4F7F\u7528
+  instance:
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: hystrix
+  messages:
+    encoding: UTF-8
+  http:
+    encoding:
+      enabled: true
+      charset: UTF-8
+
+
+ribbon:
+  httpclient:
+    enabled: false
+  okhttp:
+    enabled: true
+  ReadTimeout: 6000
+  ConnectTimeout: 6000
+  # \u540C\u4E00\u5B9E\u4F8B\u6700\u5927\u91CD\u8BD5\u6B21\u6570\uFF0C\u4E0D\u5305\u62EC\u9996\u6B21\u8C03\u7528
+  MaxAutoRetries: 0
+  # \u91CD\u8BD5\u5176\u4ED6\u5B9E\u4F8B\u7684\u6700\u5927\u91CD\u8BD5\u6B21\u6570\uFF0C\u4E0D\u5305\u62EC\u9996\u6B21\u6240\u9009\u7684server
+  MaxAutoRetriesNextServer: 0
+  # \u662F\u5426\u6240\u6709\u64CD\u4F5C\u90FD\u8FDB\u884C\u91CD\u8BD5
+  OkToRetryOnAllOperations: false
+
+
+hystrix:
+  command:
+    default:
+      execution:
+        timeout:
+          enabled: true
+        isolation:
+          thread:
+            timeoutInMilliseconds: 6000
