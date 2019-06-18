@@ -9,10 +9,10 @@ import org.springframework.core.env.ConfigurableEnvironment;
 //@Configuration
 public class FeginConfig {
 
-    @Bean
-    public Retryer feignRetryer() {
-        return Retryer.NEVER_RETRY;
-    }
+//    @Bean
+//    public Retryer feignRetryer() {
+//        return Retryer.NEVER_RETRY;
+//    }
 
 //    @Bean
 //    public Request.Options requestOptions(ConfigurableEnvironment env){
