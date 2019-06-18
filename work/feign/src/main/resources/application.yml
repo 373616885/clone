@@ -1,0 +1,25 @@
+server:
+  port: 8891
+
+feign:
+  client:
+    config:
+      default:           #服务名，填写default为所有服务
+        connectTimeout: 100000
+        readTimeout: 100000
+
+eureka:
+  client:
+    register-with-eureka: false
+    service-url:
+      defaultZone: http://192.168.10.39:8761/eureka/
+  instance:
+    hostname: feign
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+  application:
+    name: feign
+
+

@@ -1,0 +1,43 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://192.168.10.39:8761/eureka/
+  instance:
+    hostname: data-xinyan
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+
+  application:
+    name: data-xinyan
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://cdb-3ck1xky7.gz.tencentcdb.com:10122/little_whale_loan?useUnicode=true&characterEncoding=UTF-8&useSSL=false&useAffectedRows=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    username: xjjk
+    password: Xjjk189@
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 15
+      connection-test-query: select 1 from dual
+      connection-timeout: 6000
+
+  jpa:
+    show-sql: false
+
+
+  ## 新颜探针A配置
+  xinyan:
+    host: https://test.xinyan.com
+    merchNo: 8000013189
+    pfxPwd: 217526
+    pfxPath: F:\\files\\8000013189_pri.pfx
+    cerPath: F:\\files\\bfkey_8000013189.cer
+
+
+
+logging:
+  level:
+    jia: DEBUG
+    ROOT: INFO
