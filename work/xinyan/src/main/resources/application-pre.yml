@@ -1,0 +1,36 @@
+eureka:
+  client:
+    service-url:
+      defaultZone: http://47.112.117.58:8761/eureka/
+  instance:
+    hostname: data-xinyan
+    prefer-ip-address: true
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+
+spring:
+
+  application:
+    name: data-xinyan
+
+  datasource:
+    type: com.zaxxer.hikari.HikariDataSource
+    url: jdbc:mysql://172.18.164.102:3306/little_whale_loan_prepare?useUnicode=true&characterEncoding=UTF-8&useSSL=false&useAffectedRows=true&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai
+    username: preparexjdk
+    password: Xjdk@1896
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    hikari:
+      maximum-pool-size: 15
+      connection-test-query: select 1 from dual
+      connection-timeout: 6000
+
+  jpa:
+    show-sql: false
+
+
+  ## 新颜探针A配置
+  xinyan:
+    host: https://test.xinyan.com/product/negative/v4/black
+    merchNo: 8000013189
+    pfxPwd: 217526
+    pfxPath: /home/appdev/files/8000013189_pri.pfx
+    cerPath: /home/appdev/files/bfkey_8000013189.cer
