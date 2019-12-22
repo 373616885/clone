@@ -4,3 +4,4 @@
 /work/common/gradle
 **/.idea
 **/*.iml
+/spring-cloud/cloud/logs
