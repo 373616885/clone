@@ -22,7 +22,7 @@
         <dependency>
             <groupId>com.qin</groupId>
             <artifactId>api</artifactId>
-            <version>1.0.1</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

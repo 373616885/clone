@@ -4,17 +4,17 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.qin.provider.mapper.DeptMapper">
 
-    <resultMap id="dept" type="com.qin.api.entry.Dept">
+    <resultMap id="BaseResultMap" type="com.qin.api.entry.Dept">
         <id column="dept_no" jdbcType="INTEGER" property="deptNo"/>
         <result column="dept_name" jdbcType="VARCHAR" property="deptName"/>
         <result column="db_source" jdbcType="VARCHAR" property="dbSource"/>
     </resultMap>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="dept" >
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap" >
         SELECT * FROM dept WHERE dept_no=#{dept_no}
     </select>
 
-    <select id="findAll" resultMap="dept">
+    <select id="findAll" resultMap="BaseResultMap">
         SELECT * FROM dept
     </select>
 
