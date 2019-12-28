@@ -1,0 +1,20 @@
+server:
+  port: 8761
+
+logging:
+  config: classpath:log4j2.xml
+
+spring:
+  application:
+    name: eureka
+eureka:
+  instance:
+    appname: eureka
+  client:
+    fetch-registry: false # 不需要去检索服务，自己就是注册中心
+    register-with-eureka: false # false 表示不向注册中心注册自己
+    service-url:
+      defaultZone: http://${eureka.instance.appname}:${server.port}/eureka/ #对外暴露地址
+  server:
+    enable-self-preservation: false # 关闭自我保护模式（默认为打开）打开容易取到不存在的服务实例
+    eviction-interval-timer-in-ms: 5000 # 续期时间，即扫描失效服务的间隔时间（缺省为60*1000ms）
