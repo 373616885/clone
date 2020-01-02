@@ -61,23 +61,10 @@
 
     <build>
         <finalName>${project.artifactId}</finalName>
-        <resources>
-            <resource>
-                <directory>src/main/resources</directory>
-                <filtering>true</filtering>
-            </resource>
-        </resources>
+
 
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
-                <configuration>
-                    <delimiters>
-                        <delimiter>$</delimiter>
-                    </delimiters>
-                </configuration>
-            </plugin>
+
             <!--当发布到maven仓库时，也会自动带上源码-->
             <!--配置生成源码包-->
             <plugin>
@@ -106,7 +93,8 @@
                     <target>${java.version}</target>
                     <parameters>true</parameters>
                     <encoding>UTF-8</encoding>
-                    <proc>none</proc>
+                    <!-- 这个会导致lombok 失效 -->
+                    <!--<proc>none</proc>-->
                 </configuration>
             </plugin>
         </plugins>
