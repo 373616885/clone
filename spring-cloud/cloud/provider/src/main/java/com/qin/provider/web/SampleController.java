@@ -15,7 +15,7 @@ public class SampleController {
     private final DeptMapper deptMapper;
 
     @GetMapping("/sample")
-    public List<Dept> sample(){
+    public List<Dept> sample() {
         Dept dept = Dept.builder().deptName("开发部").dbSource("1").build();
 
         deptMapper.insertSelective(dept);

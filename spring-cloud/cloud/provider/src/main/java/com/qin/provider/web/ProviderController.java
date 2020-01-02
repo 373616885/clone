@@ -15,7 +15,7 @@ public class ProviderController {
     private final DeptMapper deptMapper;
 
     @GetMapping("/dept/find/all")
-    public List<Dept> findAll(){
+    public List<Dept> findAll() {
         return deptMapper.findAll();
     }
 

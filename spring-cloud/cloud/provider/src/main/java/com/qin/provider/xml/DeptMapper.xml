@@ -10,7 +10,7 @@
         <result column="db_source" jdbcType="VARCHAR" property="dbSource"/>
     </resultMap>
 
-    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap" >
+    <select id="selectByPrimaryKey" parameterType="java.lang.Long" resultMap="BaseResultMap">
         SELECT * FROM dept WHERE dept_no=#{dept_no}
     </select>
 
