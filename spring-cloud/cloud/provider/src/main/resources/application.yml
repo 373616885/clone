@@ -7,7 +7,7 @@ logging:
 eureka:
   client:
     serviceUrl:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://localhost:9001/eureka/,http://localhost:9002/eureka/,http://localhost:9003/eureka/
   instance:
     # eureka 服务名称的修改
     instance-id: ${spring.cloud.client.ip-address}:${server.port}
@@ -23,10 +23,10 @@ spring:
   application:
     name: provider
   datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://47.100.185.77:3306/qin?characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=1000&socketTimeout=3000&serverTimezone=GMT%2B8
-    #driver-class-name: com.p6spy.engine.spy.P6SpyDriver
-    #url: jdbc:p6spy:mysql://47.100.185.77:3306/qin?characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=1000&socketTimeout=3000&serverTimezone=GMT%2B8
+    #driver-class-name: com.mysql.cj.jdbc.Driver
+    #url: jdbc:mysql://47.100.185.77:3306/qin?characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=1000&socketTimeout=3000&serverTimezone=GMT%2B8
+    driver-class-name: com.p6spy.engine.spy.P6SpyDriver
+    url: jdbc:p6spy:mysql://47.100.185.77:3306/qin?characterEncoding=UTF-8&useSSL=false&autoReconnect=true&failOverReadOnly=false&connectTimeout=1000&socketTimeout=3000&serverTimezone=GMT%2B8
     username: root
     password: 373616885
     type: com.zaxxer.hikari.HikariDataSource
@@ -44,9 +44,29 @@ mybatis:
 
 info:
   app:
-    name: ${spring.application.name}-${server.port}
+    name: ${spring.application.name}-${management.server.port}
   company:
     name: qinjp
   build:
     artifactId: $project.artifactId$
     version: $project.version$
+
+# 暴露所有端点
+management:
+  endpoint:
+    shutdown:
+      # post 请求
+      enabled: false
+    health:
+      show-details: always
+  endpoints:
+    web:
+      #base-path: /application
+      exposure:
+        # * 在yaml 文件属于关键字
+        include: "*"
+        exclude: env
+  server:
+    port: 8004
+    servlet:
+      context-path: /management # 只有在设置了 management.server.port 时才有效

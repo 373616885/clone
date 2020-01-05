@@ -7,10 +7,8 @@
         <artifactId>cloud</artifactId>
         <version>1.0.1</version>
     </parent>
-
-    <artifactId>eureka</artifactId>
-
-    <name>eureka</name>
+    <artifactId>eureka-three</artifactId>
+    <name>eureka-three</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -19,7 +17,6 @@
     </properties>
 
     <dependencies>
-
         <dependency>
             <groupId>org.springframework.cloud</groupId>
             <artifactId>spring-cloud-starter-netflix-eureka-server</artifactId>

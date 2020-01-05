@@ -93,7 +93,6 @@
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
             <scope>runtime</scope>
-            <version>8.0.17</version>
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/p6spy/p6spy -->
@@ -132,12 +131,15 @@
         <resources>
             <resource>
                 <directory>src/main/java</directory>
+                <!--是否需要被替换，true为需要替换 false 不替换-->
+                <filtering>false</filtering>
                 <includes>
                     <include>**/*.xml</include>
                 </includes>
             </resource>
             <resource>
                 <directory>src/main/resources</directory>
+                <!--是否需要被替换，true为需要替换 false 不替换-->
                 <filtering>true</filtering>
             </resource>
         </resources>
