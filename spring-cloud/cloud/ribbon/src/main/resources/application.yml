@@ -1,0 +1,24 @@
+server:
+  port: 8101
+
+logging:
+  config: classpath:log4j2.xml
+
+
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:9001/eureka/,http://localhost:9002/eureka/,http://localhost:9003/eureka/
+  instance:
+    # eureka 服务名称的修改
+    instance-id: ${spring.cloud.client.ip-address}:${server.port}
+    # 显示路径显示IP
+    prefer-ip-address: true
+    # 每间隔1s，向服务端发送一次心跳，证明自己依然”存活“。
+    lease-renewal-interval-in-seconds: 1
+    # 告诉服务端，如果我2s之内没有给你发心跳，就代表我“死”了，将我踢出掉。
+    lease-expiration-duration-in-seconds: 2
+
+spring:
+  application:
+    name: ribbon

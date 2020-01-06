@@ -23,7 +23,11 @@
         <module>api</module>
         <module>consumer</module>
         <module>eureka</module>
+        <module>eureka-one</module>
+        <module>eureka-two</module>
+        <module>eureka-three</module>
 		<module>provider</module>
+        <module>ribbon</module>
     </modules>
 
     <properties>
