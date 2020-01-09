@@ -2,21 +2,23 @@ package com.qin.provider.web;
 
 import com.qin.api.entry.Dept;
 import com.qin.provider.mapper.DeptMapper;
+import lombok.AllArgsConstructor;
+import lombok.NonNull;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
+@RequiredArgsConstructor
 public class ProviderController {
 
-    @Autowired
-    private DeptMapper deptMapper;
+    @NonNull
+    private final DeptMapper deptMapper;
 
     @Value("${server.port}")
     private String port;
