@@ -22,3 +22,12 @@ eureka:
 spring:
   application:
     name: ribbon
+
+info:
+  app:
+    name: ${spring.application.name}-${management.server.port}
+  company:
+    name: qinjp
+  build:
+    artifactId: $project.artifactId$
+    version: $project.version$

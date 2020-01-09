@@ -1,5 +1,9 @@
 package com.qin.ribbon.config;
 
+import com.netflix.loadbalancer.IRule;
+import com.netflix.loadbalancer.RandomRule;
+import com.netflix.loadbalancer.RetryRule;
+import com.netflix.loadbalancer.RoundRobinRule;
 import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,5 +19,17 @@ public class RestTemplateConfig {
         return new RestTemplate();
     }
 
+    /**
+     * 自定义规则负载均衡规则
+     * @return
+     */
+    @Bean
+    public IRule myRule(){
+        // 随机算法
+        // return new RandomRule();
+        // 轮询算法
+        //return new RoundRobinRule();
 
+        return new RetryRule();
+    }
 }

@@ -1,5 +1,5 @@
 server:
-  port: 8002
+  port: 8003
 
 logging:
   config: classpath:log4j2.xml
@@ -67,6 +67,6 @@ management:
         include: "*"
         exclude: env
   server:
-    port: 8005
+    port: 8006
     servlet:
       context-path: /management # 只有在设置了 management.server.port 时才有效
