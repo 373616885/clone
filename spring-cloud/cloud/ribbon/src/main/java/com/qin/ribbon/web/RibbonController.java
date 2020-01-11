@@ -12,13 +12,20 @@ import java.util.List;
 @RestController
 public class RibbonController {
 
-    private static final String url = "http://PROVIDER";
+    private static final String PROVIDER = "http://PROVIDER";
+
+    private static final String PROVIDERTEST = "http://PROVIDERTEST";
 
     private final RestTemplate restTemplate;
 
     @GetMapping("ribbon/dept/find/all")
     public List<Dept> findAll() {
-        return restTemplate.getForObject(url + "/dept/find/all", List.class);
+        return restTemplate.getForObject(PROVIDER + "/dept/find/all", List.class);
+    }
+
+    @GetMapping("ribbon/test/dept/find/all")
+    public List<Dept> findTestAll() {
+        return restTemplate.getForObject(PROVIDERTEST + "/dept/find/all", List.class);
     }
 
 }
