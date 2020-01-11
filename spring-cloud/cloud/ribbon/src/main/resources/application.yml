@@ -25,7 +25,7 @@ spring:
 
 info:
   app:
-    name: ${spring.application.name}-${management.server.port}
+    name: ${spring.application.name}-${server.port}
   company:
     name: qinjp
   build:
