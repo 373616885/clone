@@ -2,10 +2,8 @@ package com.qin.provider.web;
 
 import com.qin.api.entry.Dept;
 import com.qin.provider.mapper.DeptMapper;
-import lombok.AllArgsConstructor;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,6 +23,11 @@ public class ProviderController {
 
     @GetMapping("/dept/find/all")
     public List<Dept> findAll() {
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         System.out.println("server.port:" + port);
         return deptMapper.findAll().stream().map(dept -> {
             return dept.setDbSource(port);

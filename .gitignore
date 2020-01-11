@@ -5,3 +5,7 @@
 **/.idea
 **/*.iml
 /spring-cloud/cloud/logs
+/spring-cloud/cloud/eureka-one/logs
+/spring-cloud/cloud/eureka-three/logs
+/spring-cloud/cloud/eureka-two/logs
+/spring-cloud/cloud/ribbon/logs
