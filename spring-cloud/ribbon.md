@@ -96,7 +96,9 @@
 
 ### 使用Ribbon 规则算法
 
-将 对应的规则纳入Spring 容器里
+将 对应的规则纳入Spring 容器里 
+
+**默认情况下：一个应用中只能选择一个负载均衡策略 -- 就是一个 spring 容器只能有一个 IRule 实例**
 
 ```java
  	/**
@@ -116,9 +118,138 @@
 
 
 
-### 使用自定义的规则
+### 使用自定义的规则--针对某个服务的自定义规则
+
+注意一点:自定义负载均衡的策略以及算法不能放在@ComponentScan所扫描的包下，
+不然会被所有Ribbon所共享(即所有的微服务都会使用该策略，包含PROVIDER)
+
+MyRuleConfig 和 MyRule 都不能在 @ComponentScan所扫描的包
+
+```java
+@Configuration
+public class MyRuleConfig {
+
+    @Bean
+    public IRule myRule(){
+        // 随机算法
+        return new MyRule();
+    }
+}
+```
+
+自定义的规则--参考 RandomRule  修改
+
+```java
+package com.qin.rule;
+
+import com.netflix.client.config.IClientConfig;
+import com.netflix.loadbalancer.AbstractLoadBalancerRule;
+import com.netflix.loadbalancer.ILoadBalancer;
+import com.netflix.loadbalancer.Server;
+
+import java.util.List;
+
+public class MyRule extends AbstractLoadBalancerRule {
 
 
+    private int total = 0;
+    private int index = 0;
 
 
+    public Server choose(ILoadBalancer lb, Object key) {
+        if (lb == null) {
+            return null;
+        }
+        Server server = null;
+
+        while (server == null) {
+            if (Thread.interrupted()) {
+                return null;
+            }
+            List<Server> upList = lb.getReachableServers();
+            List<Server> allList = lb.getAllServers();
+
+            int serverCount = allList.size();
+            if (serverCount == 0) {
+                /*
+                 * No servers. End regardless of pass, because subsequent passes
+                 * only get more restrictive.
+                 */
+                return null;
+            }
+
+            if (total < 5) {
+                server = upList.get(index);
+                total++;
+            } else {
+                total = 0;
+                index++;
+                if (index >= upList.size()) {
+                    index = 0;
+                }
+            }
+
+
+            if (server == null) {
+                /*
+                 * The only time this should happen is if the server list were
+                 * somehow trimmed. This is a transient condition. Retry after
+                 * yielding.
+                 */
+                Thread.yield();
+                continue;
+            }
+
+            if (server.isAlive()) {
+                return (server);
+            }
+
+            // Shouldn't actually happen.. but must be transient or a bug.
+            server = null;
+            Thread.yield();
+        }
+
+        return server;
+
+    }
+
+    @Override
+    public Server choose(Object key) {
+        return choose(getLoadBalancer(), key);
+    }
+
+    @Override
+    public void initWithNiwsConfig(IClientConfig clientConfig) {
+
+    }
+}
+
+```
+
+在启动类上加入 @RibbonClient 或者 @RibbonClients
+
+```java
+
+@SpringBootApplication
+@EnableEurekaClient
+@RibbonClient(name = "PROVIDER" ,configuration = MyRuleConfig.class)
+//@RibbonClients(value = {
+//        @RibbonClient(name = "PROVIDER",configuration = MyRuleConfig.class),
+//        @RibbonClient(name = "PROVIDERTEST",configuration = MyRuleTestConfig.class)
+//})
+public class RibbonApplication {
+
+    /**
+     * @RibbonClient 这个配置 单个 服务的 规则
+     * @RibbonClients 这个配置 多个 服务的 规则
+     * 注意一点:自定义负载均衡的策略以及算法不能放在@ComponentScan所扫描的包下，
+     * 不然会被所有Ribbon所共享(即所有的微服务都会使用该策略，包含PROVIDER)
+     * 因为：默认情况一个应用中只能选择一个负载均衡策略 -- 就是一个 spring 容器只能有一个 IRule 实例
+     */
+    public static void main(String[] args) {
+        SpringApplication.run(RibbonApplication.class, args);
+    }
+
+}
+```
 
