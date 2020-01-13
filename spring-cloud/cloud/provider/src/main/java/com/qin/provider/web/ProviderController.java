@@ -6,6 +6,7 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
@@ -32,6 +33,12 @@ public class ProviderController {
         return deptMapper.findAll().stream().map(dept -> {
             return dept.setDbSource(port);
         }).collect(Collectors.toList());
+    }
+
+    @GetMapping("/dept/get/{deptNo}")
+    public Dept getDept(@PathVariable("deptNo") long deptNo) {
+        System.out.println("deptNo : " + deptNo + " server.port:" + port);
+        return deptMapper.selectByPrimaryKey(deptNo).setDbSource(port);
     }
 
 }

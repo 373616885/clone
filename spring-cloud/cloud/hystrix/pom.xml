@@ -8,9 +8,9 @@
         <version>1.0.1</version>
     </parent>
 
-    <artifactId>feign</artifactId>
+    <artifactId>hystrix</artifactId>
 
-    <name>feign</name>
+    <name>hystrix</name>
     <description>Demo project for Spring Boot</description>
 
     <properties>
@@ -26,16 +26,14 @@
             <version>${project.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+        </dependency>
 
         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-actuator</artifactId>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.springframework.boot</groupId>
-                    <artifactId>spring-boot-starter-logging</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
         </dependency>
 
 
@@ -46,8 +44,14 @@
 
 
         <dependency>
-            <groupId>org.springframework.cloud</groupId>
-            <artifactId>spring-cloud-starter-netflix-eureka-client</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-starter-logging</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
 
@@ -85,7 +89,6 @@
             <version>3.4.2</version>
         </dependency>
 
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-configuration-processor</artifactId>
@@ -97,7 +100,6 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
-
 
     </dependencies>
 
@@ -131,14 +133,6 @@
         </plugins>
         <!-- 子模块会覆盖父类的设置 -->
         <resources>
-            <resource>
-                <directory>src/main/java</directory>
-                <!--是否需要被替换，true为需要替换 false 不替换-->
-                <filtering>false</filtering>
-                <includes>
-                    <include>**/*.xml</include>
-                </includes>
-            </resource>
             <resource>
                 <directory>src/main/resources</directory>
                 <!--是否需要被替换，true为需要替换 false 不替换-->
