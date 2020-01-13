@@ -12,10 +12,10 @@ import java.util.List;
 @FeignClient(value = "provider")
 public interface DeptService {
 
-    @RequestMapping(value = "/dept/find/all", method = RequestMethod.GET)
+    @RequestMapping(value = "dept/find/all", method = RequestMethod.GET)
     List<Dept> findAll();
 
-    @RequestMapping(value = "/dept/get/{deptNo}", method = RequestMethod.GET)
-    public Dept getDept(@PathVariable("deptNo") long deptNo);
+    @RequestMapping(value = "dept/get/{deptNo}", method = RequestMethod.GET)
+    Dept getDept(@PathVariable("deptNo") long deptNo);
 
 }

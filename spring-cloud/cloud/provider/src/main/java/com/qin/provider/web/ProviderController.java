@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 @RestController
@@ -36,9 +37,13 @@ public class ProviderController {
     }
 
     @GetMapping("/dept/get/{deptNo}")
-    public Dept getDept(@PathVariable("deptNo") long deptNo) {
+    public Dept getDept(@PathVariable("deptNo") long deptNo) throws InterruptedException {
+        Thread.sleep(5000);
         System.out.println("deptNo : " + deptNo + " server.port:" + port);
-        return deptMapper.selectByPrimaryKey(deptNo).setDbSource(port);
+        Dept dept = deptMapper.selectByPrimaryKey(deptNo);
+        return Objects.isNull(dept) ?
+                Dept.builder().dbSource("this deptNo is null").build() :
+                dept.setDbSource(port);
     }
 
 }

@@ -16,7 +16,7 @@ monitorInterval : 用于指定log4j自动重新配置的监测间隔时间，单
         <!--这个输出控制台的配置 -->
         <Console name="Console" target="SYSTEM_OUT">
             <!-- 控制台只输出level及以上级别的信息(onMatch),其他的直接拒绝(onMismatch) -->
-            <ThresholdFilter level="INFO" onMatch="ACCEPT" onMismatch="DENY"/>
+            <ThresholdFilter level="DEBUG" onMatch="ACCEPT" onMismatch="DENY"/>
             <!-- 输出日志的格式 -->
             <!-- 
                 %d{yyyy-MM-dd HH:mm:ss, SSS} : 日志生产时间 

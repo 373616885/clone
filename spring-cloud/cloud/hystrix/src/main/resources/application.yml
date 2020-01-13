@@ -5,6 +5,40 @@ logging:
   config: classpath:log4j2.xml
 
 
+feign:
+  client:
+    config:
+      default:  #服务名，填写default为所有服务 --这里就已经覆盖的 请求重试的配置--只重试 get 请求
+        connectTimeout: 6000
+        readTimeout: 6000
+  hystrix:
+    enabled: true
+
+## @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000"
+## default 和 getDept （具体方法） 系统只会取 最小的那个
+hystrix:
+  command:
+    getDept:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
+    default:
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 9000
+
+#ribbon:
+#  ReadTimeout: 2000
+#  ConnectTimeout: 2000
+#  # 同一实例最大重试次数，不包括首次调用
+#  MaxAutoRetries: 0
+#  # 重试其他实例的最大重试次数，不包括首次所选的server
+#  MaxAutoRetriesNextServer: 0
+#  # 是否所有操作都进行重试
+#  OkToRetryOnAllOperations: false
+
 eureka:
   client:
     serviceUrl:
@@ -15,9 +49,9 @@ eureka:
     # 显示路径显示IP
     prefer-ip-address: true
     # 每间隔1s，向服务端发送一次心跳，证明自己依然”存活“。
-    lease-renewal-interval-in-seconds: 1
+    #lease-renewal-interval-in-seconds: 1
     # 告诉服务端，如果我2s之内没有给你发心跳，就代表我“死”了，将我踢出掉。
-    lease-expiration-duration-in-seconds: 2
+    #lease-expiration-duration-in-seconds: 2
 
 spring:
   application:
