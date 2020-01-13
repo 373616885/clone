@@ -12,6 +12,7 @@ feign:
         connectTimeout: 6000
         readTimeout: 6000
   hystrix:
+    # 开启后 fallback 这些才生效
     enabled: true
 
 ## @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000"
@@ -23,11 +24,16 @@ hystrix:
         isolation:
           thread:
             timeoutInMilliseconds: 2000
+    DeptService#findAll():
+      execution:
+        isolation:
+          thread:
+            timeoutInMilliseconds: 2000
     default:
       execution:
         isolation:
           thread:
-            timeoutInMilliseconds: 9000
+            timeoutInMilliseconds: 4000
 
 #ribbon:
 #  ReadTimeout: 2000

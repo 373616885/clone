@@ -18,7 +18,7 @@ public class HystrixController {
 
     private final DeptService deptService;
 
-    @GetMapping("feign/dept/find/all")
+    @GetMapping("hystrix/dept/find/all")
     public List<Dept> findAll() {
         return deptService.findAll();
     }

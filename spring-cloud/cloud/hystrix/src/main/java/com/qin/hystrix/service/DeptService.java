@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.List;
 
-@FeignClient(value = "provider")
+@FeignClient(value = "provider" ,fallback = DeptServiceHystrix.class)
 public interface DeptService {
 
     @RequestMapping(value = "dept/find/all", method = RequestMethod.GET)
