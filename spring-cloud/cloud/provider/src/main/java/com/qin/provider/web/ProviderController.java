@@ -25,11 +25,11 @@ public class ProviderController {
 
     @GetMapping("/dept/find/all")
     public List<Dept> findAll() {
-        try {
-            Thread.sleep(5000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+//        try {
+//            Thread.sleep(5000);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
         System.out.println("server.port:" + port);
         return deptMapper.findAll().stream().map(dept -> {
             return dept.setDbSource(port);
@@ -38,7 +38,7 @@ public class ProviderController {
 
     @GetMapping("/dept/get/{deptNo}")
     public Dept getDept(@PathVariable("deptNo") long deptNo) throws InterruptedException {
-        Thread.sleep(5000);
+        //Thread.sleep(5000);
         System.out.println("deptNo : " + deptNo + " server.port:" + port);
         Dept dept = deptMapper.selectByPrimaryKey(deptNo);
         return Objects.isNull(dept) ?

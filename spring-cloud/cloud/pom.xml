@@ -30,6 +30,7 @@
         <module>ribbon</module>
         <module>feign</module>
         <module>hystrix</module>
+        <module>dash-board</module>
     </modules>
 
     <properties>

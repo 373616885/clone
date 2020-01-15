@@ -1,0 +1,20 @@
+server:
+  port: 8400
+
+logging:
+  config: classpath:log4j2.xml
+
+
+
+spring:
+  application:
+    name: dash-board
+
+info:
+  app:
+    name: ${spring.application.name}-${server.port}
+  company:
+    name: qinjp
+  build:
+    artifactId: $project.artifactId$
+    version: $project.version$
