@@ -125,7 +125,7 @@ public class DeptServiceHystrix implements DeptService{
 }
 ```
 
-### 超时问题
+### 超时问题 -- 一般hystrix的超时时间 需要大于Feign的超时时间
 
 hystrix 默认超时一秒需要修改
 
