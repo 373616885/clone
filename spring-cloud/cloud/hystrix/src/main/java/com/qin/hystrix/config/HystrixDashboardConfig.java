@@ -13,7 +13,7 @@ public class HystrixDashboardConfig {
 
         HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
 
-        ServletRegistrationBean registrationBean = new ServletRegistrationBean(streamServlet);
+        ServletRegistrationBean<HystrixMetricsStreamServlet> registrationBean = new ServletRegistrationBean<HystrixMetricsStreamServlet>(streamServlet);
 
         registrationBean.setLoadOnStartup(1);
 
