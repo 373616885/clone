@@ -35,6 +35,12 @@ hystrix:
           thread:
             timeoutInMilliseconds: 4000
 
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
 #ribbon:
 #  ReadTimeout: 2000
 #  ConnectTimeout: 2000
