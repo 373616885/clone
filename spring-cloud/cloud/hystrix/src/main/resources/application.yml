@@ -35,11 +35,17 @@ hystrix:
           thread:
             timeoutInMilliseconds: 4000
 
+#management:
+#  endpoints:
+#    web:
+#      exposure:
+#        include: "*"
 management:
   endpoints:
     web:
       exposure:
-        include: "*"
+        include: hystrix.stream
+    enabled-by-default: false
 
 #ribbon:
 #  ReadTimeout: 2000
