@@ -1,157 +1,134 @@
-### Hystrix 
+### Hystrix-dash-board
 
-**分布式面临的问题-- 服务雪崩**
+Hystrix 除了隔离依赖服务的调用外，Hystrix 还提供了实时的调用监控（hystrix-dash-board）
 
-多个微服务之间调用的时候，假如微服务A调用微服务B，微服务B调用微服务C, 微服务C又调用其他的微服务。如果链路上某个微服务调用响应时间过长或者不可用，对微服务A的调用就会占用越来越多的系统资源，**进而引发系统的奔溃**，这就是 “ 雪崩效应 ”
+Hystrix 会持续记录所有通过Hystrix 发起的请求的执行信息，并以统计报表和图像的形式展示给客户
 
-对于高流量的应用来说，单一的后端依赖可能会导致所有的服务器上的资源在几秒内饱和。比失败更糟的是，这些应用可能导致服务之间的延迟增加，线程和其他系统资源的紧张，从而导致整个系统发生更多的级联故障。这些都表示需要对故障和延迟进行隔离和管理，以便单个依赖关系失败，不能取消整个应用程序和系统。
+包括每秒执行多少请求，多少成功，多少失败
 
-**Hystrix是什么**
+Netflix 通过hystrix-metries-event-stream项目实现了对以上指标的监控。
 
-Hystrix 是一个用于处理分布式系统的延迟和容错的开源库，在分布式系统里，许多依赖不可避免的会调用失败，比如超时，异常（死锁和死循环）等，Hytrix 能保证在一个依赖出问题的情况下，不会导致整个服务失败，避免级联故障,已提高分布式的弹性。
+Spring Cloud 也提供Hytrix-dash-board的整合，对监控内容转换成可视乎界面
 
-“ 断路器 ” 本身是一种开关装置，当某个服务单元发生故障只后，通过断路器的故障监控，向调用反返回一个符号预期的，可处理的备选响应（fallback），而不是长时间的等待或者抛出调用方无法处理的异常，这样就保证了服务调用方的线程不会长时间，不必要地占用，从而避免故障在分布式系统中蔓延，乃至雪崩。
 
-**服务熔断**
 
-当扇出链路的某个微服务不可用或者响应时间太长时，会进行服务降级，进而熔断该节点的服务调用，快速返回“ 错误 ”的响应信息。当检测到该节点微服务调用响应正常后恢复调用链路。在SpringCloud 里通过Hystrix实现的。Hystrix 会监控微服务的调用情况，当失败到一定的阈值，缺省是5秒内20次调用失败就会启动熔断机制。熔断机制的注解是@HystrixCommand。
+### 构建 hystrix-dash-board 工程 
 
-通俗：一个服务发送异常了（超时），直接熔断，返回 fallback ，而不是一直等待
+1. pom.xml 添加依赖--里面的重要项目  hystrix-core 和  hystrix-metrics-event-stream 
 
-**服务降级**
+```xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix-dashboard</artifactId>
+</dependency>
+```
 
-服务降级（从整体负荷考虑）整体资源快不够了，忍痛将某些服务先关掉，待渡过难关，再开启回来 -- 服务down掉了，返回信息，（客户端自己实现）虽然服务水平下降，但好歹可用，比直接挂掉要强。
+	2. 在hystrix-dash-board工程里开启监控 @EnableHystrixDashboard
 
-通俗：服务挂了--客户端直接返回 fallback ，虽然服务水平下降，但好歹可用，比直接挂掉要强。
+```java
+@EnableHystrixDashboard
+@SpringBootApplication
+public class DashBoardApplication {
+
+    public static void main(String[] args) {
+        SpringApplication.run(DashBoardApplication.class, args);
+    }
+
+}
+```
+
+3. 启动 hystrix-dash-board工程 -- 输入url 看到页面证明启动成功
+
+```url
+http://localhost:8400/hystrix
+```
+
+![](img\20200208200208.png)
+
+
+
+
+
+
+
+4. 被监控的微服务（这里指的是提供微服务的工程 和 hystrix-dash-board 不是一个工程）--需要添加监控配置
+
+   配置完成后可以通过 http://localhost:8301/actuator/hystrix.stream 查看
+
+```xml
+（1）pom.xml
+<dependency>
+    <groupId>org.springframework.cloud</groupId>
+    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
+</dependency>
+<dependency>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-actuator</artifactId>
+    <exclusions>
+        <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+    </exclusions>
+</dependency>
+
+(2) yml 在actuator 将 hystrix.stream 暴露
+management:
+  endpoints:
+    web:
+      exposure:
+        include: hystrix.stream
+    enabled-by-default: false
+
+(3) @EnableHystrix
+
+(4) 添加 HystrixMetricsStreamServlet Servlet 
+package com.qin.hystrix.config;
+
+import com.netflix.hystrix.contrib.metrics.eventstream.HystrixMetricsStreamServlet;
+import org.springframework.boot.web.servlet.ServletRegistrationBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+@Configuration
+public class HystrixDashboardConfig {
+
+    @Bean
+    public ServletRegistrationBean getServlet(){
+        HystrixMetricsStreamServlet streamServlet = new HystrixMetricsStreamServlet();
+        ServletRegistrationBean<HystrixMetricsStreamServlet> registrationBean = new ServletRegistrationBean<HystrixMetricsStreamServlet>(streamServlet);
+        registrationBean.setLoadOnStartup(1);
+        registrationBean.addUrlMappings("/actuator/hystrix.stream");
+        registrationBean.setName("HystrixMetricsStreamServlet");
+        return registrationBean;
+    }
+
+}
+```
 
 
 
 ### 使用
 
-首先 hystrix 一般与  openfeign 使用 （在方法上使用都可以--Controller也可以）
+在  http://localhost:8400/hystrix  里面的-输入框-输入你要监控的 actuator/hystrix.stream
 
-引人jar
+  ![](img\20200208203720.png)
 
-```xml
-<dependency>
-    <groupId>org.springframework.cloud</groupId>
-    <artifactId>spring-cloud-starter-netflix-hystrix</artifactId>
-</dependency>
-```
+Delay : 没 2000 ms 一次轮训
 
- 开启 @EnableHystrix
+Title :  这次监控的主题 — 顺便定义
 
-```java
-@SpringBootApplication
-@EnableEurekaClient
-@EnableFeignClients(basePackages = "com.qin.hystrix.service")
-@EnableHystrix
-public class HystrixApplication {
+点击：Monitor Stream 就会出现画面
 
-    public static void main(String[] args) {
-        SpringApplication.run(HystrixApplication.class, args);
-    }
 
-}
 
-```
 
-单独使用 @HystrixCommand
 
-```java
-/**
- *  全局设置和这比较会去取最小的，这里设置大于 全局设置 是无效的
- */
-@GetMapping("/dept/get/{deptNo}")
-@HystrixCommand(fallbackMethod = "error",commandProperties = {
-    @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000")
-})
-public Dept getDept(@PathVariable("deptNo") long deptNo) {
-    Dept dept = deptService.getDept(deptNo);
-    if (Objects.isNull(dept) || Objects.isNull(dept.getDeptNo())) {
-        throw new RuntimeException("this deptNo :" + deptNo + " is null");
-    }
-    return dept;
-}
 
-public Dept error(@PathVariable("deptNo") long deptNo) {
-    System.out.println("===== " + deptNo + " =====");
-    return Dept.builder().dbSource("this deptNo :" + deptNo + " is null").build();
-}
-```
 
-在 @FeignClient 里使用  
 
-**这里和Feign 切记 DeptServiceHystrix 要纳入Spring 管理 和 开启 feign.hystrix.enabled=true**
 
-```java
-// yml  start
-feign:
-  client:
-    config:
-      default:  #服务名，填写default为所有服务 --这里就已经覆盖的 请求重试的配置--只重试 get 请求
-        connectTimeout: 6000
-        readTimeout: 6000
-  hystrix:
-    # 开启后 fallback 这些才生效
-    enabled: true
-// yml  end
-        
-@FeignClient(value = "provider" ,fallback = DeptServiceHystrix.class)
-public interface DeptService {
 
-    @RequestMapping(value = "dept/find/all", method = RequestMethod.GET)
-    List<Dept> findAll();
-
-    @RequestMapping(value = "dept/get/{deptNo}", method = RequestMethod.GET)
-    Dept getDept(@PathVariable("deptNo") long deptNo);
-
-}
-
-@Component
-public class DeptServiceHystrix implements DeptService{
-
-    @Override
-    public List<Dept> findAll() {
-        System.out.println("DeptServiceHystrix: findAll");
-        return Lists.newArrayList();
-    }
-
-    @Override
-    public Dept getDept(long deptNo) {
-        System.out.println("DeptServiceHystrix:getDept " + deptNo );
-        return Dept.builder().dbSource("DeptServiceHystrix").build();
-    }
-}
-```
-
-### 超时问题 -- 一般hystrix的超时时间 需要大于Feign的超时时间
-
-hystrix 默认超时一秒需要修改
-
-default 全局 ，getDept 具体方法 ，@HystrixProperty  这三个超时设置，系统会取最小的
-
-```yml
-## @HystrixProperty(name = "execution.isolation.thread.timeoutInMilliseconds",value = "3000"
-## default 和 getDept （具体方法） 系统只会取 最小的那个
-hystrix:
-  command:
-    getDept:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 2000
-    DeptService#findAll():
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 2000
-    default:
-      execution:
-        isolation:
-          thread:
-            timeoutInMilliseconds: 4000
-```
 
 
 
