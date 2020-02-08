@@ -15,7 +15,7 @@ public class DiscoveryController {
     private final DiscoveryClient discoveryClient;
 
     @GetMapping("/discovery")
-    public List<String> discovery(){
+    public List<ServiceInstance> discovery(){
         List<String> services = discoveryClient.getServices();
 
         services.forEach(System.out::println);
@@ -30,7 +30,7 @@ public class DiscoveryController {
             System.out.println(serviceInstance.getUri());
         });
 
-        return services;
+        return instances;
     }
 
 }
