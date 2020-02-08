@@ -148,3 +148,107 @@ Title :  这次监控的主题 — 顺便定义
 
 ![](img\20200208211243.png)
 
+
+
+### 原理
+
+数据是在创建一个HystrixCommand时设置进去的，这段逻辑在AbstractCommand（HystrixCommand的父类） 
+
+每次创建一个HystrixCommand，其属性都会被保存至HystrixCommandMetrics的静态变量中，并在hystrix.stream的请求到来时，返回并展示到dashBoard
+
+HystrixSampleSseServlet   调用自身的 **handleRequest()** 方法 
+
+```java
+ private void handleRequest(HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
+        final AtomicBoolean moreDataWillBeSent = new AtomicBoolean(true);
+        Subscription sampleSubscription = null;
+
+        /* ensure we aren't allowing more connections than we want */
+        int numberConnections = incrementAndGetCurrentConcurrentConnections();
+        try {
+            int maxNumberConnectionsAllowed = getMaxNumberConcurrentConnectionsAllowed(); //may change at runtime, so look this up for each request
+            if (numberConnections > maxNumberConnectionsAllowed) {
+                response.sendError(503, "MaxConcurrentConnections reached: " + maxNumberConnectionsAllowed);
+            } else {
+                /* initialize response */
+                response.setHeader("Content-Type", "text/event-stream;charset=UTF-8");
+                response.setHeader("Cache-Control", "no-cache, no-store, max-age=0, must-revalidate");
+                response.setHeader("Pragma", "no-cache");
+
+                final PrintWriter writer = response.getWriter();
+
+                //since the sample stream is based on Observable.interval, events will get published on an RxComputation thread
+                //since writing to the servlet response is blocking, use the Rx IO thread for the write that occurs in the onNext
+                sampleSubscription = sampleStream
+                        .observeOn(Schedulers.io())
+                        .subscribe(new Subscriber<String>() {
+                            @Override
+                            public void onCompleted() {
+                                logger.error("HystrixSampleSseServlet: ({}) received unexpected OnCompleted from sample stream", getClass().getSimpleName());
+                                moreDataWillBeSent.set(false);
+                            }
+
+                            @Override
+                            public void onError(Throwable e) {
+                                moreDataWillBeSent.set(false);
+                            }
+
+                            @Override
+                            public void onNext(String sampleDataAsString) {
+                                if (sampleDataAsString != null) {
+                                    writer.print("data: " + sampleDataAsString + "\n\n");
+                                    // explicitly check for client disconnect - PrintWriter does not throw exceptions
+                                    if (writer.checkError()) {
+                                        moreDataWillBeSent.set(false);
+                                    }
+                                    writer.flush();
+                                }
+                            }
+                        });
+
+                while (moreDataWillBeSent.get() && !isDestroyed) {
+                    try {
+                        Thread.sleep(pausePollerThreadDelayInMs);
+                        //in case stream has not started emitting yet, catch any clients which connect/disconnect before emits start
+                        writer.print("ping: \n\n");
+                        // explicitly check for client disconnect - PrintWriter does not throw exceptions
+                        if (writer.checkError()) {
+                            moreDataWillBeSent.set(false);
+                        }
+                        writer.flush();
+                    } catch (InterruptedException e) {
+                        moreDataWillBeSent.set(false);
+                    }
+                }
+            }
+        } finally {
+            decrementCurrentConcurrentConnections();
+            if (sampleSubscription != null && !sampleSubscription.isUnsubscribed()) {
+                sampleSubscription.unsubscribe();
+            }
+        }
+    }
+```
+
+
+
+详细说明：
+
+1. 这里可以看到，是以text/event-stream的格式返回相应数据的，而这种内容类型可以看做是服务器主动推送事件流，因此我们在访问/hystrix.stream端点时，页面会源源不断刷新展示最新数据。
+2. 这里就是将数据：sampleDataAsString （hystrix指标数据）写给请求方。sampleDataAsString数据源于订阅sampleStream（Observable.class）
+3. 这里每隔一定时间检查是否有后续数据，并打印ping维持连接
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
