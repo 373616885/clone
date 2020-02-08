@@ -110,7 +110,7 @@ public class HystrixDashboardConfig {
 
 ### 使用
 
-在  http://localhost:8400/hystrix  里面的-输入框-输入你要监控的 actuator/hystrix.stream
+在  http://localhost:8400/hystrix  里面的-输入框-填写你要监控的 actuator/hystrix.stream
 
   ![](img\20200208203720.png)
 
@@ -122,11 +122,23 @@ Title :  这次监控的主题 — 顺便定义
 
 
 
+![](img\20200208204005.png)
 
 
 
+查看：7色 1圈 1 线 
+
+7 色对应 
+
+![](img\20200208205550.png)
 
 
+
+1 圈：颜色代表健康程度 绿 < 黄 < 橙 < 红
+
+​		  大小代表流量，流量越大圆圈就越大
+
+1 线：用来记录2分钟内流量的相对变化
 
 
 
