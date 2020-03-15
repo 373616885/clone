@@ -54,6 +54,8 @@ http://localhost:8400/hystrix
 4. 被监控的微服务（这里指的是提供微服务的工程 和 hystrix-dash-board 不是一个工程）--需要添加监控配置
 
    配置完成后可以通过 http://localhost:8301/actuator/hystrix.stream 查看
+   
+   通过监控actuator得到信息 
 
 ```xml
 （1）pom.xml
