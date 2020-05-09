@@ -8,7 +8,7 @@ logging:
 feign:
   client:
     config:
-      default:  #服务名，填写default为所有服务 --这里就已经覆盖的 请求重试的配置--只重试 get 请求
+      default:  #服务名，填写default为所有服务 --这里就已经覆盖 请求重试的配置 (不会进行重试)--只重试 get 请求
         connectTimeout: 3000
         readTimeout: 3000
 
