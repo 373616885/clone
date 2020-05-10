@@ -25,11 +25,11 @@ public class ProviderController {
 
     @GetMapping("/dept/find/all")
     public List<Dept> findAll() {
-//        try {
-//            Thread.sleep(5000);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
+        try {
+            Thread.sleep(5000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         System.out.println("server.port:" + port);
         return deptMapper.findAll().stream().map(dept -> {
             return dept.setDbSource(port);
