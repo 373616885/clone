@@ -9,12 +9,6 @@ spring:
   application:
     name: zuul
 
-#feign:
-#  client:
-#    config:
-#      default:  #服务名，填写default为所有服务 --这里就已经覆盖 请求重试的配置 (不会进行重试)--只重试 get 请求
-#        connectTimeout: 3000
-#        readTimeout: 3000
 
 eureka:
   client:
@@ -42,11 +36,26 @@ info:
 
 
 zuul:
+  # 统一前缀
+  prefix: /qinjp
   # zuul 默认是可以使用 服务名来访问的 所以这个需要注意配置
   # 忽略直接使用服务名来访问 -- （ 不能使用 路径 /provider 访问）
-  # 忽略所有就使用 *
-  ignored-services: provider
+  # 忽略所有就使用 "*"  必须有双引号
+  ignored-services: "*"
+  # ignored-services: provider
   routes:
     ribbon:
       path: /api-provider/**
       serviceId: provider
+
+
+# zuul 网管超时问题
+ribbon:
+  OkToRetryOnAllOperations: false
+  ReadTimeout: 6000
+  ConnectTimeout: 6000
+  SocketTimeout: 6000
+  # 同一台实例重试次数，不包括首次调用
+  MaxAutoRetries: 0
+  # 其他负载均衡实例重试次数，不包括首次server调用
+  MaxAutoRetriesNextServer: 0
